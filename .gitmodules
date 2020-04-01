@@ -1,0 +1,9 @@
+[submodule "explorer-auth"]
+	path = explorer-auth
+	url = git@github.com:teco-kit/explorer-auth.git
+[submodule "explorer-backend"]
+	path = explorer-backend
+	url = git@github.com:teco-kit/explorer-backend.git
+[submodule "explorer-frontend"]
+	path = explorer-frontend
+	url = git@github.com:teco-kit/explorer-frontend.git

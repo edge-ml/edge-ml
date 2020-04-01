@@ -1,0 +1,54 @@
+version: "2"
+services:
+  backend:
+    container_name: backend
+    restart: always
+    build: ./explorer-backend
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+  authentication:
+    container_name: authentication
+    restart: always
+    build: ./explorer-auth
+    ports:
+      - "3002:3002"
+    links:
+      - mongo
+  explorer:
+    container_name: explorer
+    restart: always
+    build: ./explorer-frontend
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3001:3001"
+    volumes:
+      - static-content:/usr/src/app/build
+  nginx:
+    image: nginx
+    restart: always
+    links:
+     - authentication
+     - backend
+     - explorer
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - static-content:/usr/src/app/build
+      - ./docs:/var/www
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  mongo:
+    container_name: mongo
+    restart: always
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      - NETWORK_ACCESS=internal
+volumes:
+  static-content:
