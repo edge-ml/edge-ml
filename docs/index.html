@@ -725,6 +725,15 @@
     "name" : "UserforAuth"
   }
 };
+            defs.body = {
+  "properties" : {
+    "email" : {
+      "type" : "string",
+      "description" : "email of your user account",
+      "example" : "example@aura.edu"
+    }
+  }
+};
             defs.Dataset = {
   "type" : "object",
   "properties" : {
@@ -831,14 +840,9 @@
   }
 };
             defs.DatasetLabel = {
-  "required" : [ "end", "name", "start" ],
+  "required" : [ "end", "start", "type" ],
   "type" : "object",
   "properties" : {
-    "name" : {
-      "type" : "string",
-      "description" : "name of label",
-      "example" : "Label1"
-    },
     "type" : {
       "type" : "string",
       "description" : "id of label type",
@@ -946,13 +950,11 @@
       "type" : "array",
       "description" : "list of instructions",
       "example" : [ {
-        "name" : "einatmen",
         "duration" : 2000,
-        "unit" : "s"
+        "labelDefinitions" : [ "5e7b79a92868c32560719dbe" ]
       }, {
-        "name" : "ausatmen",
         "duration" : 2000,
-        "unit" : "s"
+        "labelDefinitions" : [ "5e7b79a92868c32560719dbe" ]
       } ],
       "items" : {
         "$ref" : "#/components/schemas/Experiment_instructions"
@@ -963,11 +965,83 @@
     "name" : "Experiment"
   }
 };
-            defs.Experiment_instructions = {
+            defs.ExperimentPopulated = {
+  "required" : [ "name" ],
   "type" : "object",
   "properties" : {
     "name" : {
-      "type" : "string"
+      "type" : "string",
+      "description" : "experiment type",
+      "example" : "respiration"
+    },
+    "instructions" : {
+      "type" : "array",
+      "description" : "list of instructions",
+      "example" : [ {
+        "duration" : 2000,
+        "labelDefinitions" : [ {
+          "name" : "ExampleLabelDefinition1",
+          "labels" : [ {
+            "name" : "Label1",
+            "color" : "#fffff"
+          }, {
+            "name" : "Label2",
+            "color" : "#cdcdcd"
+          } ]
+        }, {
+          "name" : "ExampleLabelDefinition2",
+          "labels" : [ {
+            "name" : "Label3",
+            "color" : "#eeeeee"
+          }, {
+            "name" : "Label4",
+            "color" : "#cfcfcf"
+          } ]
+        } ]
+      }, {
+        "duration" : 2000,
+        "labelDefinitions" : [ {
+          "name" : "ExampleLabelDefinition3",
+          "labels" : [ {
+            "name" : "Label3",
+            "color" : "#eeeeee"
+          }, {
+            "name" : "Label4",
+            "color" : "#cfcfcf"
+          } ]
+        } ]
+      } ],
+      "items" : {
+        "$ref" : "#/components/schemas/ExperimentPopulated_instructions"
+      }
+    }
+  },
+  "xml" : {
+    "name" : "ExperimentPopulated"
+  }
+};
+            defs.ExperimentPopulated_instructions = {
+  "type" : "object",
+  "properties" : {
+    "duration" : {
+      "type" : "integer"
+    },
+    "labelingId" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/LabelDefinition"
+      }
+    }
+  }
+};
+            defs.Experiment_instructions = {
+  "type" : "object",
+  "properties" : {
+    "labelDefinitions" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
     },
     "duration" : {
       "type" : "integer"
@@ -1015,6 +1089,14 @@
   },
   "xml" : {
     "name" : "FusedSeries"
+  }
+};
+            defs.inline_response_200 = {
+  "properties" : {
+    "message" : {
+      "type" : "string",
+      "example" : "deleted user with email 'example@aura.edu'"
+    }
   }
 };
             defs.LabelDefinition = {
@@ -1234,6 +1316,9 @@
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
                   <li class="nav-header" data-group="Auth"><a href="#api-Auth">API Methods - Auth</a></li>
+                    <li data-group="Auth" data-name="deleteUser" class="">
+                      <a href="#api-Auth-deleteUser">deleteUser</a>
+                    </li>
                     <li data-group="Auth" data-name="loginUser" class="">
                       <a href="#api-Auth-loginUser">loginUser</a>
                     </li>
@@ -1309,6 +1394,9 @@
                     </li>
                     <li data-group="Experiment" data-name="getExperimentById" class="">
                       <a href="#api-Experiment-getExperimentById">getExperimentById</a>
+                    </li>
+                    <li data-group="Experiment" data-name="getExperimentByIdPopulated" class="">
+                      <a href="#api-Experiment-getExperimentByIdPopulated">getExperimentByIdPopulated</a>
                     </li>
                     <li data-group="Experiment" data-name="getExperiments" class="">
                       <a href="#api-Experiment-getExperiments">getExperiments</a>
@@ -1439,6 +1527,340 @@
         <div id="sections">
                 <section id="api-Auth">
                   <h1>Auth</h1>
+                    <div id="api-Auth-deleteUser">
+                      <article id="api-Auth-deleteUser-0" data-group="User" data-name="deleteUser" data-version="0">
+                        <div class="pull-left">
+                          <h1>deleteUser</h1>
+                          <p>Delete user account</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Deletes your user account. You need to send email in request body</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/auth/unregister</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Auth-deleteUser-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Auth-deleteUser-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Auth-deleteUser-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Auth-deleteUser-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Auth-deleteUser-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Auth-deleteUser-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Auth-deleteUser-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Auth-deleteUser-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Auth-deleteUser-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Auth-deleteUser-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Auth-deleteUser-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Auth-deleteUser-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://aura.dmz.teco.edu/auth/unregister"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Auth-deleteUser-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.AuthApi;
+
+import java.io.File;
+import java.util.*;
+
+public class AuthApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        AuthApi apiInstance = new AuthApi();
+        Body body = ; // Body | Delete your user account, send email to prevent unintentional deletions
+        try {
+            inline_response_200 result = apiInstance.deleteUser(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#deleteUser");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-deleteUser-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.AuthApi;
+
+public class AuthApiExample {
+
+    public static void main(String[] args) {
+        AuthApi apiInstance = new AuthApi();
+        Body body = ; // Body | Delete your user account, send email to prevent unintentional deletions
+        try {
+            inline_response_200 result = apiInstance.deleteUser(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#deleteUser");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Auth-deleteUser-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Auth-deleteUser-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+Body *body = ; // Delete your user account, send email to prevent unintentional deletions
+
+AuthApi *apiInstance = [[AuthApi alloc] init];
+
+// Delete user account
+[apiInstance deleteUserWith:body
+              completionHandler: ^(inline_response_200 output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-deleteUser-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var AuraApIs = require('aura_ap_is');
+var defaultClient = AuraApIs.ApiClient.instance;
+
+
+var api = new AuraApIs.AuthApi()
+var body = ; // {{Body}} Delete your user account, send email to prevent unintentional deletions
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.deleteUser(body, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Auth-deleteUser-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Auth-deleteUser-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class deleteUserExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new AuthApi();
+            var body = new Body(); // Body | Delete your user account, send email to prevent unintentional deletions
+
+            try
+            {
+                // Delete user account
+                inline_response_200 result = apiInstance.deleteUser(body);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling AuthApi.deleteUser: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-deleteUser-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiAuthApi();
+$body = ; // Body | Delete your user account, send email to prevent unintentional deletions
+
+try {
+    $result = $api_instance->deleteUser($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AuthApi->deleteUser: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-deleteUser-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::AuthApi;
+
+
+my $api_instance = WWW::SwaggerClient::AuthApi->new();
+my $body = WWW::SwaggerClient::Object::Body->new(); # Body | Delete your user account, send email to prevent unintentional deletions
+
+eval { 
+    my $result = $api_instance->deleteUser(body => $body);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling AuthApi->deleteUser: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-deleteUser-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.AuthApi()
+body =  # Body | Delete your user account, send email to prevent unintentional deletions
+
+try: 
+    # Delete user account
+    api_response = api_instance.delete_user(body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling AuthApi->deleteUser: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "description" : "Delete your user account, send email to prevent unintentional deletions",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/body"
+      }
+    }
+  },
+  "required" : true
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_deleteUser_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_deleteUser_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-deleteUser-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-deleteUser-200-schema">
+                                  <div id='responses-deleteUser-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/inline_response_200"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-deleteUser-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-deleteUser-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-deleteUser-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 400 - Provided email does not match user email or email missing </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                            <h3> Status: 401 - Unauthorized </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-Auth-loginUser">
                       <article id="api-Auth-loginUser-0" data-group="User" data-name="loginUser" data-version="0">
                         <div class="pull-left">
@@ -8455,7 +8877,7 @@ except ApiException as e:
                                 </div>
                             </div>
 
-                            <h3> Status: 404 - Experiment not found </h3>
+                            <h3> Status: 404 - EventType not found </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
@@ -8470,7 +8892,7 @@ except ApiException as e:
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "Experiment not found",
+  "description" : "EventType not found",
   "content" : {
     "application/json" : {
       "schema" : {
@@ -10979,6 +11401,411 @@ except ApiException as e:
                                     </script>
                                   </div>
                                   <input id='responses-getExperimentById-404-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Experiment-getExperimentByIdPopulated">
+                      <article id="api-Experiment-getExperimentByIdPopulated-0" data-group="User" data-name="getExperimentByIdPopulated" data-version="0">
+                        <div class="pull-left">
+                          <h1>getExperimentByIdPopulated</h1>
+                          <p>Find a populated experiment by ID. It means that LabelType and LabelingID as nested objects are included as objects, not only as id.</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns a single experiment</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/experiments/{experimentId}/populated</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Experiment-getExperimentByIdPopulated-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Experiment-getExperimentByIdPopulated-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Experiment-getExperimentByIdPopulated-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Experiment-getExperimentByIdPopulated-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Experiment-getExperimentByIdPopulated-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Experiment-getExperimentByIdPopulated-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Experiment-getExperimentByIdPopulated-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Experiment-getExperimentByIdPopulated-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Experiment-getExperimentByIdPopulated-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Experiment-getExperimentByIdPopulated-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Experiment-getExperimentByIdPopulated-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Experiment-getExperimentByIdPopulated-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://aura.dmz.teco.edu/api/experiments/{experimentId}/populated"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Experiment-getExperimentByIdPopulated-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.ExperimentApi;
+
+import java.io.File;
+import java.util.*;
+
+public class ExperimentApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        ExperimentApi apiInstance = new ExperimentApi();
+        String experimentId = experimentId_example; // String | ID of experiment to return
+        try {
+            ExperimentPopulated result = apiInstance.getExperimentByIdPopulated(experimentId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ExperimentApi#getExperimentByIdPopulated");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Experiment-getExperimentByIdPopulated-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ExperimentApi;
+
+public class ExperimentApiExample {
+
+    public static void main(String[] args) {
+        ExperimentApi apiInstance = new ExperimentApi();
+        String experimentId = experimentId_example; // String | ID of experiment to return
+        try {
+            ExperimentPopulated result = apiInstance.getExperimentByIdPopulated(experimentId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ExperimentApi#getExperimentByIdPopulated");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Experiment-getExperimentByIdPopulated-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Experiment-getExperimentByIdPopulated-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+String *experimentId = experimentId_example; // ID of experiment to return
+
+ExperimentApi *apiInstance = [[ExperimentApi alloc] init];
+
+// Find a populated experiment by ID. It means that LabelType and LabelingID as nested objects are included as objects, not only as id.
+[apiInstance getExperimentByIdPopulatedWith:experimentId
+              completionHandler: ^(ExperimentPopulated output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Experiment-getExperimentByIdPopulated-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var AuraApIs = require('aura_ap_is');
+var defaultClient = AuraApIs.ApiClient.instance;
+
+
+var api = new AuraApIs.ExperimentApi()
+var experimentId = experimentId_example; // {{String}} ID of experiment to return
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getExperimentByIdPopulated(experimentId, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Experiment-getExperimentByIdPopulated-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Experiment-getExperimentByIdPopulated-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class getExperimentByIdPopulatedExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new ExperimentApi();
+            var experimentId = experimentId_example;  // String | ID of experiment to return
+
+            try
+            {
+                // Find a populated experiment by ID. It means that LabelType and LabelingID as nested objects are included as objects, not only as id.
+                ExperimentPopulated result = apiInstance.getExperimentByIdPopulated(experimentId);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling ExperimentApi.getExperimentByIdPopulated: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Experiment-getExperimentByIdPopulated-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiExperimentApi();
+$experimentId = experimentId_example; // String | ID of experiment to return
+
+try {
+    $result = $api_instance->getExperimentByIdPopulated($experimentId);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling ExperimentApi->getExperimentByIdPopulated: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Experiment-getExperimentByIdPopulated-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::ExperimentApi;
+
+
+my $api_instance = WWW::SwaggerClient::ExperimentApi->new();
+my $experimentId = experimentId_example; # String | ID of experiment to return
+
+eval { 
+    my $result = $api_instance->getExperimentByIdPopulated(experimentId => $experimentId);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling ExperimentApi->getExperimentByIdPopulated: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Experiment-getExperimentByIdPopulated-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.ExperimentApi()
+experimentId = experimentId_example # String | ID of experiment to return
+
+try: 
+    # Find a populated experiment by ID. It means that LabelType and LabelingID as nested objects are included as objects, not only as id.
+    api_response = api_instance.get_experiment_by_id_populated(experimentId)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ExperimentApi->getExperimentByIdPopulated: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">experimentId*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_getExperimentByIdPopulated_experimentId">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          ID of experiment to return
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getExperimentByIdPopulated-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getExperimentByIdPopulated-200-schema">
+                                  <div id='responses-getExperimentByIdPopulated-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ExperimentPopulated"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getExperimentByIdPopulated-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getExperimentByIdPopulated-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getExperimentByIdPopulated-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 401 - Unauthorized </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getExperimentByIdPopulated-401-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getExperimentByIdPopulated-401-schema">
+                                  <div id='responses-getExperimentByIdPopulated-401-schema-401' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Unauthorized",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/responses/UnauthorizedError"
+      },
+      "example" : {
+        "error" : "Please provide a valid JWT token"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getExperimentByIdPopulated-401-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getExperimentByIdPopulated-401-schema-401');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getExperimentByIdPopulated-401-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 404 - Experiment not found </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getExperimentByIdPopulated-404-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getExperimentByIdPopulated-404-schema">
+                                  <div id='responses-getExperimentByIdPopulated-404-schema-404' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Experiment not found",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/responses/NotFoundError"
+      },
+      "example" : {
+        "error" : "Not Found"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getExperimentByIdPopulated-404-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getExperimentByIdPopulated-404-schema-404');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getExperimentByIdPopulated-404-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
