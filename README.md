@@ -14,10 +14,10 @@ git clone --recurse-submodules git@github.com:teco-kit/explorer.git
 ```
 sudo docker-compose build
 docker-compose up
-
 ```
 
 Services are now available:
-* explorer-frontend:
-* explorer-backend:
-* explorer-auth: 
+* explorer-frontend: localhost
+* explorer-backend: localhost/api
+* explorer-auth: localhost/auth
+* documentation: localhost/docs
