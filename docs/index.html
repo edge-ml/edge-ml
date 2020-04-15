@@ -2525,7 +2525,7 @@ public class DatasetsApiExample {
 
 
         DatasetsApi apiInstance = new DatasetsApi();
-        Dataset body = ; // Dataset | Dataset object that needs to be created
+        Dataset body = ; // Dataset | Dataset object that needs to be created. If labelings is not defined but experiments is, the labelings are automatically generated.
         try {
             Dataset result = apiInstance.createDataset(body);
             System.out.println(result);
@@ -2544,7 +2544,7 @@ public class DatasetsApiExample {
 
     public static void main(String[] args) {
         DatasetsApi apiInstance = new DatasetsApi();
-        Dataset body = ; // Dataset | Dataset object that needs to be created
+        Dataset body = ; // Dataset | Dataset object that needs to be created. If labelings is not defined but experiments is, the labelings are automatically generated.
         try {
             Dataset result = apiInstance.createDataset(body);
             System.out.println(result);
@@ -2561,7 +2561,7 @@ public class DatasetsApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Datasets-createDataset-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
-Dataset *body = ; // Dataset object that needs to be created
+Dataset *body = ; // Dataset object that needs to be created. If labelings is not defined but experiments is, the labelings are automatically generated.
 
 DatasetsApi *apiInstance = [[DatasetsApi alloc] init];
 
@@ -2584,7 +2584,7 @@ var defaultClient = AuraApIs.ApiClient.instance;
 
 
 var api = new AuraApIs.DatasetsApi()
-var body = ; // {{Dataset}} Dataset object that needs to be created
+var body = ; // {{Dataset}} Dataset object that needs to be created. If labelings is not defined but experiments is, the labelings are automatically generated.
 
 var callback = function(error, data, response) {
   if (error) {
@@ -2616,7 +2616,7 @@ namespace Example
 
 
             var apiInstance = new DatasetsApi();
-            var body = new Dataset(); // Dataset | Dataset object that needs to be created
+            var body = new Dataset(); // Dataset | Dataset object that needs to be created. If labelings is not defined but experiments is, the labelings are automatically generated.
 
             try
             {
@@ -2640,7 +2640,7 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 
 $api_instance = new Swagger\Client\ApiDatasetsApi();
-$body = ; // Dataset | Dataset object that needs to be created
+$body = ; // Dataset | Dataset object that needs to be created. If labelings is not defined but experiments is, the labelings are automatically generated.
 
 try {
     $result = $api_instance->createDataset($body);
@@ -2658,7 +2658,7 @@ use WWW::SwaggerClient::DatasetsApi;
 
 
 my $api_instance = WWW::SwaggerClient::DatasetsApi->new();
-my $body = WWW::SwaggerClient::Object::Dataset->new(); # Dataset | Dataset object that needs to be created
+my $body = WWW::SwaggerClient::Object::Dataset->new(); # Dataset | Dataset object that needs to be created. If labelings is not defined but experiments is, the labelings are automatically generated.
 
 eval { 
     my $result = $api_instance->createDataset(body => $body);
@@ -2679,7 +2679,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DatasetsApi()
-body =  # Dataset | Dataset object that needs to be created
+body =  # Dataset | Dataset object that needs to be created. If labelings is not defined but experiments is, the labelings are automatically generated.
 
 try: 
     # Add a new dataset
@@ -2707,7 +2707,7 @@ except ApiException as e:
                                 <script>
                                 $(document).ready(function() {
                                   var schemaWrapper = {
-  "description" : "Dataset object that needs to be created",
+  "description" : "Dataset object that needs to be created. If labelings is not defined but experiments is, the labelings are automatically generated.",
   "content" : {
     "application/json" : {
       "schema" : {
