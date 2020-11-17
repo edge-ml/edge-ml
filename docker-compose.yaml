@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 services:
   backend:
     container_name: backend
@@ -17,13 +17,10 @@ services:
     links:
       - mongo
   explorer:
-    container_name: explorer
-    restart: always
+    container_name: explorer-build
     build: ./explorer-frontend
     environment:
       - NODE_ENV=production
-    ports:
-      - "3001:3001"
     volumes:
       - static-content:/usr/src/app/build
   nginx:
