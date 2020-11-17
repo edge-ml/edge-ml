@@ -13,11 +13,22 @@ git clone --recurse-submodules git@github.com:teco-kit/explorer.git
 
 ```
 
-## Docker Environment
+## Installing docker
+Please follow the instructions to install <a href="https://docs.docker.com/install/"> 
+docker</a> and <a href="https://docs.docker.com/compose/install/">install docker-compose</a>.
+
+Then run the following command to build the images and to pull the mongoDB image.
 
 ```
 sudo docker-compose build
+
+```
+
+Running the following command will start the dockerized application on your local machine:
+
+```
 docker-compose up
+
 ```
 
 Services are now available:
