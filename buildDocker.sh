@@ -5,4 +5,4 @@ sudo docker-compose down -v
 echo "Building"
 sudo docker-compose build
 echo "Running"
-sudo docker-compose up
+sudo docker-compose up -d
