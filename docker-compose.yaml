@@ -1,42 +1,50 @@
 version: "3"
 services:
-  backend:
-    container_name: backend
+  explorer-backend:
+    container_name: explorer-backend
     restart: always
     build: ./explorer-backend
+    image: tecokit/explorer-backend
     ports:
       - "3000:3000"
     links:
       - mongo
-  authentication:
-    container_name: authentication
+    depends_on: 
+      - explorer-authentication
+    networks:
+      - backbone
+  explorer-authentication:
+    container_name: explorer-authentication
     restart: always
     build: ./explorer-auth
+    image: tecokit/explorer-authentication
     ports:
       - "3002:3002"
     links:
       - mongo
-  explorer:
-    container_name: explorer-build
+    networks:
+      - backbone
+  explorer-frontend:
+    container_name: explorer-frontend
     build: ./explorer-frontend
     environment:
       - NODE_ENV=production
-    volumes:
-      - static-content:/usr/src/app/build
-  nginx:
-    image: nginx
+    image: tecokit/explorer-frontend
     restart: always
     links:
-     - authentication
-     - backend
-     - explorer
+     - explorer-authentication
+     - explorer-backend
+    depends_on: 
+      - explorer-backend
+      - explorer-authentication
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - static-content:/usr/src/app/build
       - ./docs:/var/www
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - backbone
   mongo:
     container_name: mongo
     restart: always
@@ -47,5 +55,11 @@ services:
       - "27017:27017"
     environment:
       - NETWORK_ACCESS=internal
+    networks:
+      - backbone
 volumes:
   static-content:
+
+networks:
+  backbone:
+    driver: bridge
