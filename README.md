@@ -10,29 +10,35 @@ Clone with `--recurse-submodules`-flag to automatically initialize and update ea
 
 ```
 git clone --recurse-submodules git@github.com:teco-kit/explorer.git
-
 ```
 
-## Installing docker
+## Install with docker
 Please follow the instructions to install <a href="https://docs.docker.com/install/"> 
 docker</a> and <a href="https://docs.docker.com/compose/install/">install docker-compose</a>.
 
-Then run the following command to build the images and to pull the mongoDB image.
+### Build and deploy your own images
+
+Run the following command to build the images and to pull the mongoDB image.
 
 ```
 sudo docker-compose build
-
 ```
 
 Running the following command will start the dockerized application on your local machine:
 
 ```
 docker-compose up
-
 ```
-
 Services are now available:
 * explorer-frontend: localhost
 * explorer-backend: localhost/api
 * explorer-auth: localhost/auth
 * documentation: localhost/docs
+
+
+## Deploy on a server
+
+Run the following command to automatically pull and start the latestest version of the dockerized application from Docker Hub.
+```
+curl https://raw.githubusercontent.com/teco-kit/explorer/master/run.sh | sh
+```
