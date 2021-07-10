@@ -39,7 +39,11 @@ services:
       - "443:443"
     volumes:
       - ./docs:/var/www
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - web-root:/var/www/html
+      - ./nginx_https.conf:/etc/nginx/nginx.conf:ro
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - dhparam:/etc/ssl/certs
     networks:
       - backbone
   mongo:
@@ -54,8 +58,33 @@ services:
       - NETWORK_ACCESS=internal
     networks:
       - backbone
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - explorer-frontend
+      # Add --staging to this command and remove --force-renewal if you just want to test it
+    command: certonly --webroot --webroot-path=/var/www/html --email explorer@teco.edu --agree-tos --no-eff-email --force-renewal -d explorer.dmz.teco.edu
+
 volumes:
-  static-content:
+  certbot-etc:
+  certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/explorer/dockerVolume/
+      o: bind
+  dhparam:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/explorer/dhparam/
+      o: bind
 
 networks:
   backbone:
