@@ -42,3 +42,9 @@ Run the following command to automatically pull and start the latestest version 
 ```
 curl https://raw.githubusercontent.com/teco-kit/explorer/master/run.sh | sh
 ```
+
+# ACK
+```
+This work was supported by the Competence Center Karlsruhe for AI Systems Engineering (CC-KING, https://www.ai-engineering.eu)
+sponsored by the Ministry of Economic Affairs, Labour and Tourism Baden-Württemberg. 
+```
