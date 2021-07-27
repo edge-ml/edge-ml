@@ -49,7 +49,7 @@ services:
   mongo:
     container_name: mongo
     restart: always
-    image: mongo
+    image: mongo:4
     volumes:
       - ./data:/data/db
     ports:
