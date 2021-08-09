@@ -1,4 +1,4 @@
-# Explorer
+# Edge-ML
 React based tool for collaborative, browser-based time series data annotation. Supports managing and interacting with datasets, videos, labels, users and has 2FA to improve compliance.
 
 (Screenshots, hosted version, and detailed feature list coming soon)
