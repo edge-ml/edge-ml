@@ -9,7 +9,7 @@ React based tool for collaborative, browser-based time series data annotation. S
 Clone with `--recurse-submodules`-flag to automatically initialize and update each submodule.
 
 ```
-git clone --recurse-submodules git@github.com:teco-kit/explorer.git
+git clone --recurse-submodules git@github.com:edge-ml/edge-ml.git
 ```
 
 ## Install with docker
@@ -40,7 +40,7 @@ Services are now available:
 
 Run the following command to automatically pull and start the latestest version of the dockerized application from Docker Hub.
 ```
-curl https://raw.githubusercontent.com/teco-kit/explorer/master/run.sh | sh
+curl https://raw.githubusercontent.com/edge-ml/edge-ml/master/run.sh | sh
 ```
 
 # ACK
