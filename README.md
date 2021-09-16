@@ -6,13 +6,13 @@ If you are interested in using _edge-ml_ please go to [app.edge-ml.org](https://
 
 Please visit our [wiki](https://github.com/edge-ml/edge-ml/wiki) for a comprehensive overview of edge-ml and some excellent tutorials on how to get started. 
 
-## 🌟 Orgs using edge-ml
+## 🌟 Organizations using edge-ml
 A growing number of organizations supports and uses _edge-ml_ in their workflows.
 - [Karlsruhe Institute of Technology](https://kit.edu)
 - [TECO (Telecooperation Office)](https://teco.edu)
 - [Competence Center Karlsruhe for AI Systems Engineering](https://www.ai-engineering.eu)
 
-# For Developers
+# 💻 For Developers
 
 ## Installation
 
