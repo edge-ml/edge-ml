@@ -2,9 +2,9 @@
 edge-ml helps developers build models faster and more robustly with an open-source toolchain for embedded machine learning. With a few simple steps edge-ml lets you record data, label samples, train models and deploy validated embedded machine learning directly on the edge. edge-ml requires minimal initilization and supports upload in real-time as well as in bulk from the edge. Pre-recorded data can also be drag-and-dropped as CSV files to the edge-ml cloud storage. Models are generated using AutoML therefore requiring minimal user configuration. The models are optimized for resource-constrained embedded chips based on hardware-aware neural network training.
 
 ## 🛸 New to edge-ml?
-If you are interested in using _edge-ml_ please go to [app.edge-ml.org](app.edge-ml.org) and register!
+If you are interested in using _edge-ml_ please go to [app.edge-ml.org](https://app.edge-ml.org) and register!
 
-Please visit our [wiki]() for a comprehensive overview of edge-ml and some excellent tutorials on how to get started. 
+Please visit our [wiki](https://github.com/edge-ml/edge-ml/wiki) for a comprehensive overview of edge-ml and some excellent tutorials on how to get started. 
 
 # For Developers
 
