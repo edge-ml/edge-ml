@@ -9,7 +9,7 @@ Please visit our [wiki](https://github.com/edge-ml/edge-ml/wiki) for a comprehen
 ## 🌟 Orgs using edge-ml
 A growing number of organizations supports and uses _edge-ml_ in their workflows.
 - [Karlsruhe Institute of Technology](https://kit.edu)
-- [TECO](https://teco.edu)
+- [TECO (Telecooperation Office)](https://teco.edu)
 - [Competence Center Karlsruhe for AI Systems Engineering](https://www.ai-engineering.eu)
 
 # For Developers
