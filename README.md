@@ -47,10 +47,8 @@ Run the following command to automatically pull and start the latestest version 
 curl https://raw.githubusercontent.com/edge-ml/edge-ml/master/run.sh | sh
 ```
 
-# ACK
-```
+# Acknowledgements
 This project was partially supported by the German Federal Ministry of Education and Research (BMBF) as part of the project AURA, grant 16SV8296.
 
 This work was partially supported by the Competence Center Karlsruhe for AI Systems Engineering (CC-KING, https://www.ai-engineering.eu)
 sponsored by the Ministry of Economic Affairs, Labour and Tourism Baden-Württemberg. 
-```
