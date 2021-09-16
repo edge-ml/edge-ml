@@ -11,7 +11,7 @@ A growing number of organizations support and use _edge-ml_ in their workflows.
 - [Karlsruhe Institute of Technology](https://kit.edu)
 - [TECO (Telecooperation Office)](https://teco.edu)
 - [Competence Center Karlsruhe for AI Systems Engineering](https://www.ai-engineering.eu)
-- [Smart Data Innovation Lab](SDIL)
+- [SDIL - Smart Data Innovation Lab](https://www.sdil.de/de/home-page)
 
 # 💻 For Developers
 
