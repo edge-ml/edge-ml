@@ -41,10 +41,10 @@ Running the following command will start the dockerized application on your loca
 docker-compose up
 ```
 Services are now available:
-* explorer-frontend: localhost
-* explorer-backend: localhost/api
-* explorer-auth: localhost/auth
-* documentation: localhost/docs
+* edge-ml-frontend: localhost
+* edge-ml-backend: localhost/api
+* edge-ml-auth: localhost/auth
+* edge-ml documentation: localhost/docs
 
 
 ## Deploy on a server
