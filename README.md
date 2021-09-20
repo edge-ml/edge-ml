@@ -64,6 +64,8 @@ Then run `npm start` in the following order in each sub-module's folder:
 - backend
 - frontend
 
+You can now easily debug the different components. Changes can be comitted in each sub-repository and pushed from there directly.
+
 
 # Acknowledgements
 This project was partially supported by the German Federal Ministry of Education and Research (BMBF) as part of the project AURA, grant 16SV8296.
