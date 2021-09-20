@@ -15,7 +15,7 @@ A growing number of organizations support and use _edge-ml_ in their workflows.
 
 # 💻 For Developers
 
-## Installation
+## Cloning the Repository
 
 Clone with `--recurse-submodules`-flag to automatically initialize and update each submodule.
 
@@ -23,7 +23,7 @@ Clone with `--recurse-submodules`-flag to automatically initialize and update ea
 git clone --recurse-submodules git@github.com:edge-ml/edge-ml.git
 ```
 
-## Install with docker
+## Install with Docker
 Please follow the instructions to install <a href="https://docs.docker.com/install/"> 
 docker</a> and <a href="https://docs.docker.com/compose/install/">install docker-compose</a>.
 
@@ -53,6 +53,17 @@ Run the following command to automatically pull and start the latestest version 
 ```
 curl https://raw.githubusercontent.com/edge-ml/edge-ml/master/run.sh | sh
 ```
+
+## Debug components
+First build the docker image by executing `sudo docker-compose build` in the root folder of the project.
+
+Then start the database by running `sudo docker-compose up mongo`.
+
+Then run `npm start` in the following order in each sub-module's folder:
+- authentication
+- backend
+- frontend
+
 
 # Acknowledgements
 This project was partially supported by the German Federal Ministry of Education and Research (BMBF) as part of the project AURA, grant 16SV8296.
