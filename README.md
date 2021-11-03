@@ -15,6 +15,12 @@ A growing number of organizations support and use _edge-ml_ in their workflows.
 
 # 💻 For Developers
 
+## Setup
+
+A comprehensive installation and setup guide is provided [in the wiki](https://github.com/edge-ml/edge-ml/wiki#Installation-Guide).
+If you want to contribute, this is the recommended way to install and run edge-ml. 
+Installing with Docker is also possible, but it's rather meant to be a quick and easy way to run edge-ml, not as development setup.
+
 ## Cloning the Repository
 
 Clone with `--recurse-submodules`-flag to automatically initialize and update each submodule.
