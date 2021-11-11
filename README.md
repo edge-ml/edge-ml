@@ -61,14 +61,7 @@ curl https://raw.githubusercontent.com/edge-ml/edge-ml/master/run.sh | sh
 ```
 
 ## Debug components
-First build the docker image by executing `sudo docker-compose build` in the root folder of the project.
-
-Then start the database by running `sudo docker-compose up mongo`.
-
-Then run `npm start` in the following order in each sub-module's folder:
-- authentication
-- backend
-- frontend
+Please follow the steps [here](https://github.com/edge-ml/edge-ml/wiki#Installation-Guide).
 
 You can now easily debug the different components. Changes can be comitted in each sub-repository and pushed from there directly.
 
