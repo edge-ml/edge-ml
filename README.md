@@ -17,7 +17,7 @@ A growing number of organizations support and use _edge-ml_ in their workflows.
 
 ## Setup
 
-A comprehensive installation and setup guide is provided [in the wiki](https://github.com/edge-ml/edge-ml/wiki#Installation-Guide).
+A comprehensive installation and setup guide is provided [in the wiki](https://github.com/edge-ml/edge-ml/wiki#Join-the-development).
 If you want to contribute, this is the recommended way to install and run edge-ml. 
 Installing with Docker is also possible, but it's rather meant to be a quick and easy way to run edge-ml, not as development setup.
 
