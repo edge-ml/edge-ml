@@ -65,6 +65,12 @@ Please follow the steps [here](https://github.com/edge-ml/edge-ml/wiki#Installat
 
 You can now easily debug the different components. Changes can be comitted in each sub-repository and pushed from there directly.
 
+# Debug with ngrok
+Run the following command 
+```
+ngrok start --config ngrok.yml --all
+```
+
 
 # Acknowledgements
 This project was partially supported by the German Federal Ministry of Education and Research (BMBF) as part of the project AURA, grant 16SV8296.
