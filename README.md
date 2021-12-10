@@ -65,11 +65,7 @@ Please follow the steps [here](https://github.com/edge-ml/edge-ml/wiki#Installat
 
 You can now easily debug the different components. Changes can be comitted in each sub-repository and pushed from there directly.
 
-# Debug with ngrok
-Run the following command 
-```
-ngrok start --config ngrok.yml --all
-```
+If your docker instance keeps restarting, delete the "data" folder (it is corrupted, this happens on macOS from time to time when you don't shut down the container).
 
 
 # Acknowledgements
