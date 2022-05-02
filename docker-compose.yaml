@@ -1,12 +1,21 @@
 version: "3"
 services:
+  explorer-model:
+    container_name: explorer-model
+    restart: always
+    build: ./ml
+    image: tecokit/explorer-model
+    ports:
+      - "3003:3003"
+    networks:
+      - backbone
   explorer-backend:
     container_name: explorer-backend
     restart: always
     build: ./backend
     image: tecokit/explorer-backend
     ports:
-      - "3000:3000"
+      - "3001:3001"
     links:
       - mongo
     depends_on: 
@@ -34,9 +43,11 @@ services:
     links:
      - explorer-authentication
      - explorer-backend
+     - explorer-model
     depends_on: 
       - explorer-backend
       - explorer-authentication
+      - explorer-model
     ports:
       - "80:80"
       - "443:443"
