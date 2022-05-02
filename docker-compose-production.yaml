@@ -3,7 +3,8 @@ services:
   explorer-model:
     container_name: explorer-model
     restart: always
-    build: ./ml
+    volumes:
+      - .env:/app/.env
     image: tecokit/explorer-model
     ports:
       - "3003:3003"
