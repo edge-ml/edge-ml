@@ -10,3 +10,6 @@
 [submodule "ml"]
 	path = ml
 	url = git@github.com:edge-ml/ml.git
+[submodule "firmwareCompile"]
+	path = firmwareCompile
+	url = git@github.com:edge-ml/firmwareCompile.git
