@@ -44,10 +44,12 @@ services:
      - explorer-authentication
      - explorer-backend
      - explorer-model
+     - explorer-firmware-compile
     depends_on: 
       - explorer-backend
       - explorer-authentication
       - explorer-model
+      - explorer-firmware-compile
     ports:
       - "80:80"
       - "443:443"
@@ -56,6 +58,17 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - backbone
+
+  explorer-firmware-compile:
+    container_name: explorer-firmware-compile    
+    build: ./firmwareCompile
+    restart: always
+    image: tecokit/explorer-firmware-compile
+    ports: 
+        - 3004:8000
+    networks:
+      - backbone  
+
   mongo:
     container_name: mongo
     restart: always
