@@ -65,7 +65,7 @@ services:
     restart: always
     image: tecokit/explorer-firmware-compile
     ports: 
-        - 3004:8000
+        - 3004:3004
     networks:
       - backbone  
 
