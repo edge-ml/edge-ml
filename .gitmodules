@@ -10,3 +10,6 @@
 [submodule "ml"]
 	path = ml
 	url = git@github.com:edge-ml/ml.git
+[submodule "Dataset-store"]
+	path = Dataset-store
+	url = git@github.com:edge-ml/Dataset-store.git

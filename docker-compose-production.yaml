@@ -56,6 +56,18 @@ services:
       - dhparam:/etc/ssl/certs
     networks:
       - backbone
+  dataset-store:
+    container_name: dataset-store
+    build: ./Dataset-store
+    restart: always
+    ports:
+      - 3004:3004
+    volumes:
+      - ./data:/data
+    networks:
+      - backbone
+    links:
+      - mongo
   mongo:
     container_name: mongo
     restart: always
@@ -66,6 +78,17 @@ services:
       - "27017:27017"
     environment:
       - NETWORK_ACCESS=internal
+    networks:
+      - backbone
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
     networks:
       - backbone
   certbot:
