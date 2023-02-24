@@ -63,7 +63,7 @@ services:
     ports:
       - 3004:3004
     volumes:
-      - ./data:/data
+      - ./tsData:/app/app/DATA
     networks:
       - backbone
     links:

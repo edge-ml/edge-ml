@@ -15,5 +15,5 @@ yarn.lock
 .idea
 
 /data
-
+/tsData
 ngrok.yml
