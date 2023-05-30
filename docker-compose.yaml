@@ -64,6 +64,7 @@ services:
       - 3004:3004
     volumes:
       - ./tsData:/app/app/DATA
+      - ./rawCSVDATA:/app/app/RAW_UPLOAD_DATA
     networks:
       - backbone
     links:

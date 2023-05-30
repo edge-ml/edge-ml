@@ -17,3 +17,5 @@ yarn.lock
 /data
 /tsData
 ngrok.yml
+ts_data
+rawCSVDATA
