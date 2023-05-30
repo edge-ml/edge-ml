@@ -3,6 +3,8 @@ services:
   explorer-model:
     container_name: explorer-model
     restart: always
+    volumes:
+      - .env:/app/.env
     image: tecokit/explorer-model
     ports:
       - "3003:3003"
@@ -56,6 +58,19 @@ services:
       - ./dhparam:/etc/ssl/certs
     networks:
       - backbone
+  dataset-store:
+    container_name: dataset-store
+    build: ./Dataset-store
+    restart: always
+    ports:
+      - 3004:3004
+    volumes:
+      - ./tsData:/app/app/DATA
+      - ./rawCSVDATA:/app/app/RAW_CSV_DATA
+    networks:
+      - backbone
+    links:
+      - mongo
   mongo:
     container_name: mongo
     restart: always
@@ -66,6 +81,17 @@ services:
       - "27017:27017"
     environment:
       - NETWORK_ACCESS=internal
+    networks:
+      - backbone
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+      - rabbitmq_log:/var/log/rabbitmq/
     networks:
       - backbone
   certbot:
@@ -84,6 +110,22 @@ volumes:
   certbot-etc:
   certbot-var:
   web-root:
+<<<<<<< HEAD
+=======
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/explorer/dockerVolume/
+      o: bind
+  dhparam:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/explorer/dhparam/
+      o: bind
+  rabbitmq_data:
+  rabbitmq_log:
+>>>>>>> 2d51756a7962a0ca7dc198a6bcf46484b266ab8f
 
 networks:
   backbone:

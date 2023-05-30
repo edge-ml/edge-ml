@@ -4,3 +4,10 @@
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/edge-ml/frontend.git
+	url = git@githubb.com:edge-ml/frontend.git
+[submodule "ml"]
+	path = ml
+	url = git@github.com:edge-ml/ml.git
+[submodule "Dataset-store"]
+	path = Dataset-store
+	url = git@github.com:edge-ml/Dataset-store.git
