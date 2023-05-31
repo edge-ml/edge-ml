@@ -5,7 +5,7 @@ services:
     restart: always
     volumes:
       - .env:/app/.env
-    image: tecokit/explorer-model
+    build: ./ml
     ports:
       - "3003:3003"
     networks:
@@ -14,7 +14,6 @@ services:
     container_name: explorer-backend
     restart: always
     build: ./backend
-    image: tecokit/explorer-backend
     ports:
       - "3001:3001"
     links:
@@ -26,7 +25,7 @@ services:
   explorer-authentication:
     container_name: explorer-authentication
     restart: always
-    image: tecokit/explorer-authentication
+    build: ./authentication
     ports:
       - "3002:3002"
     links:
@@ -38,7 +37,6 @@ services:
     environment:
       - NODE_ENV=production
     build: ./frontend
-    image: tecokit/explorer-frontend
     restart: always
     links:
      - explorer-authentication
@@ -46,6 +44,8 @@ services:
     depends_on: 
       - explorer-backend
       - explorer-authentication
+      - dataset-store
+      - explorer-model
     ports:
       - "80:80"
       - "443:443"
@@ -104,29 +104,25 @@ services:
     depends_on:
       - explorer-frontend
       # Add --staging to this command and remove --force-renewal if you just want to test it
-    command: certonly --webroot --webroot-path=/var/www/html --email explorer@teco.edu --agree-tos --no-eff-email --staging -d edge-ml-beta.dmz.teco.edu
+    command: certonly --webroot --webroot-path=/var/www/html --email explorer@teco.edu --agree-tos --no-eff-email --force-renewal -d edge-ml-beta.dmz.teco.edu
 
 volumes:
   certbot-etc:
   certbot-var:
   web-root:
-<<<<<<< HEAD
-=======
     driver: local
     driver_opts:
       type: none
-      device: /home/ubuntu/explorer/dockerVolume/
+      device: /home/ubuntu/dockerVolume/
       o: bind
   dhparam:
     driver: local
     driver_opts:
       type: none
-      device: /home/ubuntu/explorer/dhparam/
+      device: /home/ubuntu/dhparam/
       o: bind
   rabbitmq_data:
   rabbitmq_log:
->>>>>>> 2d51756a7962a0ca7dc198a6bcf46484b266ab8f
-
 networks:
   backbone:
     driver: bridge
