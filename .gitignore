@@ -17,3 +17,6 @@ yarn.lock
 /data
 
 ngrok.yml
+TS_DATA
+tsData
+RAW_UPLOAD_DATA
