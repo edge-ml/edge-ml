@@ -20,3 +20,6 @@ ngrok.yml
 ts_data
 rawCSVDATA
 RAW_UPLOAD_DATA
+.env
+certbot/*
+dhparam/*

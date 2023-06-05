@@ -5,7 +5,7 @@ services:
     restart: always
     volumes:
       - .env:/app/.env
-    image: tecokit/explorer-model
+    build: ./ml
     ports:
       - "3003:3003"
     networks:
@@ -13,7 +13,7 @@ services:
   explorer-backend:
     container_name: explorer-backend
     restart: always
-    image: tecokit/explorer-backend
+    build: ./backend
     ports:
       - "3001:3001"
     links:
@@ -25,7 +25,7 @@ services:
   explorer-authentication:
     container_name: explorer-authentication
     restart: always
-    image: tecokit/explorer-authentication
+    build: ./authentication
     ports:
       - "3002:3002"
     links:
@@ -36,7 +36,7 @@ services:
     container_name: explorer-frontend
     environment:
       - NODE_ENV=production
-    image: tecokit/explorer-frontend
+    build: ./frontend
     restart: always
     links:
      - explorer-authentication
@@ -44,6 +44,8 @@ services:
     depends_on: 
       - explorer-backend
       - explorer-authentication
+      - dataset-store
+      - explorer-model
     ports:
       - "80:80"
       - "443:443"
@@ -53,7 +55,7 @@ services:
       - ./nginx_https.conf:/etc/nginx/nginx.conf:ro
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-      - dhparam:/etc/ssl/certs
+      - ./dhparam:/etc/ssl/certs
     networks:
       - backbone
   dataset-store:
@@ -102,7 +104,7 @@ services:
     depends_on:
       - explorer-frontend
       # Add --staging to this command and remove --force-renewal if you just want to test it
-    command: certonly --webroot --webroot-path=/var/www/html --email explorer@teco.edu --agree-tos --no-eff-email --force-renewal -d app.edge-ml.org
+    command: certonly --webroot --webroot-path=/var/www/html --email explorer@teco.edu --agree-tos --no-eff-email --force-renewal -d edge-ml-beta.dmz.teco.edu
 
 volumes:
   certbot-etc:
@@ -111,17 +113,16 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/ubuntu/explorer/dockerVolume/
+      device: /home/ubuntu/dockerVolume/
       o: bind
   dhparam:
     driver: local
     driver_opts:
       type: none
-      device: /home/ubuntu/explorer/dhparam/
+      device: /home/ubuntu/dhparam/
       o: bind
   rabbitmq_data:
   rabbitmq_log:
-
 networks:
   backbone:
     driver: bridge
