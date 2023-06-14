@@ -23,3 +23,4 @@ RAW_UPLOAD_DATA
 .env
 certbot/*
 dhparam/*
+s3Data/*

@@ -69,6 +69,17 @@ services:
       - backbone
     links:
       - mongo
+  s3:
+    container_name: s3
+    restart: always
+    image: scireum/s3-ninja
+    ports:
+      - 9444:9000
+      - 80:8080
+    volumes:
+      - ./s3Data:/home/sirius/data
+    networks:
+      - backbone
   mongo:
     container_name: mongo
     restart: always
