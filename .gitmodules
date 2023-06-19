@@ -1,12 +1,10 @@
-[submodule "authentication"]
-	path = authentication
-	url = git@github.com:edge-ml/authentication.git
 [submodule "backend"]
 	path = backend
-	url = git@github.com:edge-ml/backend.git
+	url = https://github.com/edge-ml/backend.git
 [submodule "frontend"]
 	path = frontend
-	url = git@github.com:edge-ml/frontend.git
+	url = https://github.com/edge-ml/frontend.git
+	url = git@githubb.com:edge-ml/frontend.git
 [submodule "ml"]
 	path = ml
 	url = git@github.com:edge-ml/ml.git
