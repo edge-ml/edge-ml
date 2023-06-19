@@ -18,7 +18,7 @@ services:
       - "3001:3001"
     links:
       - mongo
-    depends_on: 
+    depends_on:
       - explorer-authentication
     networks:
       - backbone
@@ -41,10 +41,10 @@ services:
     image: tecokit/explorer-frontend
     restart: always
     links:
-     - explorer-authentication
-     - explorer-backend
-     - explorer-model
-    depends_on: 
+      - explorer-authentication
+      - explorer-backend
+      - explorer-model
+    depends_on:
       - explorer-backend
       - explorer-authentication
       - explorer-model
@@ -54,6 +54,30 @@ services:
     volumes:
       - ./docs:/var/www
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - backbone
+  dataset-store:
+    container_name: dataset-store
+    build: ./Dataset-store
+    restart: always
+    ports:
+      - 3004:3004
+    volumes:
+      - ./tsData:/app/app/DATA
+      - ./rawCSVDATA:/app/app/RAW_UPLOAD_DATA
+    networks:
+      - backbone
+    links:
+      - mongo
+  s3:
+    container_name: s3
+    restart: always
+    image: scireum/s3-ninja
+    ports:
+      - 9444:9000
+      - 80:8080
+    volumes:
+      - ./s3Data:/home/sirius/data
     networks:
       - backbone
   mongo:
@@ -68,8 +92,22 @@ services:
       - NETWORK_ACCESS=internal
     networks:
       - backbone
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+      - rabbitmq_log:/var/log/rabbitmq/
+    networks:
+      - backbone
 volumes:
   static-content:
+  rabbitmq_data:
+  rabbitmq_log:
+
 
 networks:
   backbone:

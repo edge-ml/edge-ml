@@ -15,9 +15,16 @@ yarn.lock
 .idea
 
 /data
-
+/tsData
 ngrok.yml
 TS_DATA
 tsData
 RAW_UPLOAD_DATA
 s3Data
+ts_data
+rawCSVDATA
+RAW_UPLOAD_DATA
+.env
+certbot/*
+dhparam/*
+s3Data/*
