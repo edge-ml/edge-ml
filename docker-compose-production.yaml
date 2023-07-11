@@ -110,7 +110,14 @@ services:
       - explorer-frontend
       # Add --staging to this command and remove --force-renewal if you just want to test it
     command: certonly --webroot --webroot-path=/var/www/html --email explorer@teco.edu --agree-tos --no-eff-email --force-renewal -d edge-ml-beta.dmz.teco.edu
-
+  arduino-compiler:
+    container_name: arduino-compiler
+    build: ./firmwareCompile
+    restart: always
+    ports:
+      - 3005:3005
+    networks:
+      - backbone
 volumes:
   certbot-etc:
   certbot-var:

@@ -103,6 +103,14 @@ services:
       - rabbitmq_log:/var/log/rabbitmq/
     networks:
       - backbone
+  arduino-compiler:
+    container_name: arduino-compiler
+    build: ./firmwareCompile
+    restart: always
+    ports:
+      - 3005:3005
+    networks:
+      - backbone
 volumes:
   static-content:
   rabbitmq_data:
