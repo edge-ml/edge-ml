@@ -11,3 +11,6 @@
 [submodule "Dataset-store"]
 	path = Dataset-store
 	url = git@github.com:edge-ml/Dataset-store.git
+[submodule "firmwareCompile"]
+	path = firmwareCompile
+	url = git@github.com:edge-ml/firmwareCompile.git
