@@ -1,16 +1,16 @@
 [submodule "backend"]
 	path = backend
-	url = git@github.com:edge-ml/backend.git
+	url = https://github.com/edge-ml/backend.git
 [submodule "frontend"]
 	path = frontend
-	url = git@github.com:edge-ml/frontend.git
+	url = https://github.com/edge-ml/frontend.git
 [submodule "Dataset-store"]
 	path = Dataset-store
-	url = git@github.com:edge-ml/Dataset-store.git
+	url = https://github.com/edge-ml/Dataset-store.git
 [submodule "authentication"]
 	path = authentication
-	url = git@github.com:edge-ml/authentication.git
+	url = https://github.com/edge-ml/authentication.git
 [submodule "ml"]
 	path = ml
-	url = git@github.com:edge-ml/ml.git
+	url = https://github.com/edge-ml/ml.git
 
