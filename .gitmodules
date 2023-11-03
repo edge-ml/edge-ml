@@ -10,3 +10,7 @@
 [submodule "authentication"]
 	path = authentication
 	url = git@github.com:edge-ml/authentication.git
+[submodule "ml"]
+	path = ml
+	url = git@github.com:edge-ml/ml.git
+
