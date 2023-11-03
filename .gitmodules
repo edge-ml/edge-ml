@@ -1,6 +1,6 @@
 [submodule "backend"]
 	path = backend
-	url = https://github.com/edge-ml/backend.git
+	url = git@github.com:edge-ml/backend.git
 [submodule "frontend"]
 	path = frontend
 	url = git@github.com:edge-ml/frontend.git
