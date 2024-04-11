@@ -1,7 +1,8 @@
 version: "3"
 services:
-  explorer-model:
-    container_name: explorer-model
+  edge-ml_model:
+    image: tecokit/edge-ml_model_beta:beta
+    container_name: edge-ml_model
     restart: always
     volumes:
       - .env-docker-local:/app/.env:ro
@@ -13,8 +14,9 @@ services:
     depends_on:
       - s3
       - mongo
-  explorer-backend:
-    container_name: explorer-backend
+  edge-ml_backend:
+    container_name: edge-ml_backend
+    image: tecokit/edge-ml_backend_beta:beta
     restart: always
     build: ./backend
     volumes:
@@ -27,8 +29,9 @@ services:
       - rabbitmq
     networks:
       - backbone
-  explorer-authentication:
-    container_name: explorer-authentication
+  edge-ml_authentication:
+    container_name: edge-ml_authentication
+    image: tecokit/edge-ml_authentication_beta:beta
     restart: always
     build: ./authentication
     volumes:
@@ -39,20 +42,21 @@ services:
       - mongo
     networks:
       - backbone
-  explorer-frontend:
-    container_name: explorer-frontend
+  edge-ml_frontend:
+    container_name: edge-ml_frontend
+    image: tecokit/edge-ml_frontend_beta:beta
     environment:
       - NODE_ENV=production
     build: ./frontend
     restart: always
     links:
-     - explorer-authentication
-     - explorer-backend
+     - edge-ml_authentication
+     - edge-ml_backend
     depends_on: 
-      - explorer-backend
-      - explorer-authentication
-      - dataset-store
-      - explorer-model
+      - edge-ml_backend
+      - edge-ml_authentication
+      - edge-ml_dataset-store
+      - edge-ml_model
     ports:
       - "80:80"
       - "443:443"
@@ -61,8 +65,9 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - backbone
-  dataset-store:
-    container_name: dataset-store
+  edge-ml_dataset-store:
+    container_name: edge-ml_dataset-store
+    image: tecokit/edge-ml_dataset-store_beta:beta
     build: ./Dataset-store
     restart: always
     ports:
@@ -110,14 +115,14 @@ services:
       - ./s3Data:/home/sirius/data
     networks:
       - backbone
-  arduino-compiler:
-    container_name: arduino-compiler
-    build: ./firmwareCompile
-    restart: always
-    ports:
-      - 3005:3005
-    networks:
-      - backbone
+  # arduino-compiler:
+  #   container_name: arduino-compiler
+  #   build: ./firmwareCompile
+  #   restart: always
+  #   ports:
+  #     - 3005:3005
+  #   networks:
+  #     - backbone
 volumes:
   static-content:
   rabbitmq_data:
