@@ -13,6 +13,21 @@ A growing number of organizations support and use _edge-ml_ in their workflows.
 - [Competence Center Karlsruhe for AI Systems Engineering](https://www.ai-engineering.eu)
 - [SDIL - Smart Data Innovation Lab](https://www.sdil.de/de/home-page)
 
+# How to exeucte locally in docker?
+
+Install docker on your system and run on of the following commands:
+
+MacOS:
+```
+curl -fsSL https://raw.githubusercontent.com/edge-ml/edge-ml/beta/run_local.sh | bash 
+```
+
+Windows:
+```
+iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/edge-ml/edge-ml/beta/run_local.bat'))
+```
+
+
 # 💻 For Developers
 
 ## Setup
