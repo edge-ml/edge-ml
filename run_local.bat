@@ -1,6 +1,5 @@
 mkdir edge-ml-beta
 
-REM Change directory to edge-ml-beta
 cd edge-ml-beta
 
 REM Download docker-compose-local.yaml file
