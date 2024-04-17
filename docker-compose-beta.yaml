@@ -2,7 +2,7 @@ version: "3"
 services:
   explorer-model:
     container_name: explorer-model
-    image: tecokit/edge-ml_model_beta:beta
+    image: tecokit/edge-ml_model_beta:latest
     restart: always
     volumes:
       - .env:/app/.env:ro
@@ -13,7 +13,7 @@ services:
       - backbone
   explorer-backend:
     container_name: explorer-backend
-    image: tecokit/edge-ml_backend_beta:beta
+    image: tecokit/edge-ml_backend_beta:latest
     restart: always
     build: ./backend
     volumes:
@@ -29,7 +29,7 @@ services:
       - backbone
   explorer-authentication:
     container_name: explorer-authentication
-    image: tecokit/edge-ml_authentication_beta:beta
+    image: tecokit/edge-ml_authentication_beta:latest
     restart: always
     build: ./authentication
     volumes:
@@ -42,7 +42,7 @@ services:
       - backbone
   explorer-frontend:
     container_name: explorer-frontend
-    image: tecokit/edge-ml_frontend_beta:beta
+    image: tecokit/edge-ml_frontend_beta:latest
     environment:
       - NODE_ENV=production
     build: ./frontend
