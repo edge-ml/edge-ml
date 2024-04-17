@@ -1,7 +1,7 @@
 version: "3"
 services:
   edge-ml_model:
-    image: tecokit/edge-ml_model_beta:beta
+    image: tecokit/edge-ml_model_beta:latest
     container_name: edge-ml_model
     restart: always
     volumes:
@@ -16,7 +16,7 @@ services:
       - mongo
   edge-ml_backend:
     container_name: edge-ml_backend
-    image: tecokit/edge-ml_backend_beta:beta
+    image: tecokit/edge-ml_backend_beta:latest
     restart: always
     build: ./backend
     volumes:
@@ -31,7 +31,7 @@ services:
       - backbone
   edge-ml_authentication:
     container_name: edge-ml_authentication
-    image: tecokit/edge-ml_authentication_beta:beta
+    image: tecokit/edge-ml_authentication_beta:latest
     restart: always
     build: ./authentication
     volumes:
@@ -44,7 +44,7 @@ services:
       - backbone
   edge-ml_frontend:
     container_name: edge-ml_frontend
-    image: tecokit/edge-ml_frontend_beta:beta
+    image: tecokit/edge-ml_frontend_beta:latest
     environment:
       - NODE_ENV=production
     build: ./frontend
@@ -67,7 +67,7 @@ services:
       - backbone
   edge-ml_dataset-store:
     container_name: edge-ml_dataset-store
-    image: tecokit/edge-ml_dataset-store_beta:beta
+    image: tecokit/edge-ml_dataset-store_beta:latest
     build: ./Dataset-store
     restart: always
     ports:

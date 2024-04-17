@@ -1,0 +1,147 @@
+version: "3"
+services:
+  explorer-model:
+    container_name: explorer-model
+    image: tecokit/edge-ml_model_beta:beta
+    restart: always
+    volumes:
+      - .env:/app/.env:ro
+    build: ./ml
+    ports:
+      - "3003:3003"
+    networks:
+      - backbone
+  explorer-backend:
+    container_name: explorer-backend
+    image: tecokit/edge-ml_backend_beta:beta
+    restart: always
+    build: ./backend
+    volumes:
+      - .env:/app/.env:ro
+    ports:
+      - "3001:3001"
+    links:
+      - mongo
+    depends_on: 
+      - explorer-authentication
+      - rabbitmq
+    networks:
+      - backbone
+  explorer-authentication:
+    container_name: explorer-authentication
+    image: tecokit/edge-ml_authentication_beta:beta
+    restart: always
+    build: ./authentication
+    volumes:
+      - .env:/app/.env:ro
+    ports:
+      - "3002:3002"
+    links:
+      - mongo
+    networks:
+      - backbone
+  explorer-frontend:
+    container_name: explorer-frontend
+    image: tecokit/edge-ml_frontend_beta:beta
+    environment:
+      - NODE_ENV=production
+    build: ./frontend
+    restart: always
+    links:
+     - explorer-authentication
+     - explorer-backend
+    depends_on: 
+      - explorer-backend
+      - explorer-authentication
+      - dataset-store
+      - explorer-model
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docs:/var/www
+      - web-root:/var/www/html
+      - ./nginx_https.conf:/etc/nginx/nginx.conf:ro
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - ./dhparam:/etc/ssl/certs
+    networks:
+      - backbone
+  dataset-store:
+    container_name: dataset-store
+    image: tecokit/edge-ml_dataset-store_beta:latest
+    build: ./Dataset-store
+    restart: always
+    ports:
+      - 3004:3004
+    volumes:
+      - ./tsData:/app/app/DATA
+      - ./rawCSVDATA:/app/app/RAW_CSV_DATA
+      - .env:/app/app/.env:ro
+    networks:
+      - backbone
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    restart: always
+    image: mongo:4
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      - NETWORK_ACCESS=internal
+    networks:
+      - backbone
+  rabbitmq:
+    container_name: 'rabbitmq'
+    restart: always
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+      - rabbitmq_log:/var/log/rabbitmq/
+    networks:
+      - backbone
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - explorer-frontend
+      # Add --staging to this command and remove --force-renewal if you just want to test it
+    command: certonly --webroot --webroot-path=/var/www/html --email explorer@teco.edu --agree-tos --no-eff-email -d edge-ml-beta.dmz.teco.edu
+  arduino-compiler:
+    container_name: arduino-compiler
+    build: ./firmwareCompile
+    restart: always
+    ports:
+      - 3005:3005
+    networks:
+      - backbone
+volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/dockerVolume/
+      o: bind
+  dhparam:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/dhparam/
+      o: bind
+  rabbitmq_data:
+  rabbitmq_log:
+networks:
+  backbone:
+    driver: bridge
