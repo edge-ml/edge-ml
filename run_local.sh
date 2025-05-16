@@ -8,5 +8,5 @@ curl -o docker-compose-local.yaml https://raw.githubusercontent.com/edge-ml/edge
 curl -o .env-docker-local https://raw.githubusercontent.com/edge-ml/edge-ml/beta/.env-docker-local
 curl -o nginx.conf https://raw.githubusercontent.com/edge-ml/edge-ml/beta/nginx-local.conf
 
-docker-compose -f docker-compose-local.yaml pull
-docker-compose -f docker-compose-local.yaml up -d
+docker compose -f docker-compose-local.yaml pull
+docker compose -f docker-compose-local.yaml up -d
