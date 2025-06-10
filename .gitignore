@@ -24,3 +24,5 @@ RAW_UPLOAD_DATA
 certbot/*
 dhparam/*
 s3Data/*
+logs/*
+data/*

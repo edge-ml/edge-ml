@@ -1,54 +1,62 @@
 version: "3"
 services:
-  explorer-model:
-    container_name: explorer-model
+  edge-ml_model:
+    image: tecokit/edge-ml_model_beta:latest
+    container_name: edge-ml_model
     restart: always
+    volumes:
+      - .env-docker-local:/app/.env:ro
     build: ./ml
-    image: tecokit/explorer-model
     ports:
       - "3003:3003"
     networks:
       - backbone
-  explorer-backend:
-    container_name: explorer-backend
+    depends_on:
+      - s3
+      - mongo
+  edge-ml_backend:
+    container_name: edge-ml_backend
+    image: tecokit/edge-ml_backend_beta:latest
     restart: always
     build: ./backend
-    image: tecokit/explorer-backend
+    volumes:
+      - .env-docker-local:/app/.env:ro
     ports:
       - "3001:3001"
     links:
       - mongo
-    depends_on:
-      - explorer-authentication
+    depends_on: 
       - rabbitmq
     networks:
       - backbone
-  explorer-authentication:
-    container_name: explorer-authentication
+  edge-ml_authentication:
+    container_name: edge-ml_authentication
+    image: tecokit/edge-ml_authentication_beta:latest
     restart: always
     build: ./authentication
-    image: tecokit/explorer-authentication
+    volumes:
+      - .env-docker-local:/app/.env:ro
     ports:
       - "3002:3002"
     links:
       - mongo
     networks:
       - backbone
-  explorer-frontend:
-    container_name: explorer-frontend
-    build: ./frontend
+  edge-ml_frontend:
+    container_name: edge-ml_frontend
+    image: tecokit/edge-ml_frontend_beta:latest
     environment:
       - NODE_ENV=production
-    image: tecokit/explorer-frontend
+    build: ./frontend
     restart: always
     links:
-      - explorer-authentication
-      - explorer-backend
-      - explorer-model
-    depends_on:
-      - explorer-backend
-      - explorer-authentication
-      - explorer-model
+     - edge-ml_authentication
+     - edge-ml_backend
+    depends_on: 
+      - edge-ml_backend
+      - edge-ml_authentication
+      - edge-ml_dataset-store
+      - edge-ml_model
     ports:
       - "80:80"
       - "443:443"
@@ -57,31 +65,21 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - backbone
-  dataset-store:
-    container_name: dataset-store
+  edge-ml_dataset-store:
+    container_name: edge-ml_dataset-store
+    image: tecokit/edge-ml_dataset-store_beta:latest
     build: ./Dataset-store
     restart: always
     ports:
       - 3004:3004
     volumes:
       - ./tsData:/app/app/DATA
-      - ./rawCSVDATA:/app/app/RAW_UPLOAD_DATA
-      - .env:/app/app/.env:ro
+      - ./rawCSVDATA:/app/app/RAW_CSV_DATA
+      - .env-docker-local:/app/app/.env:ro
     networks:
       - backbone
     links:
       - mongo
-  s3:
-    container_name: s3
-    restart: always
-    image: scireum/s3-ninja
-    ports:
-      - 9444:9000
-      - 8081:8080
-    volumes:
-      - ./s3Data:/home/sirius/data
-    networks:
-      - backbone
   mongo:
     container_name: mongo
     restart: always
@@ -95,8 +93,9 @@ services:
     networks:
       - backbone
   rabbitmq:
-    image: rabbitmq:3-management-alpine
     container_name: 'rabbitmq'
+    restart: always
+    image: rabbitmq:3-management-alpine
     ports:
       - 5672:5672
       - 15672:15672
@@ -105,20 +104,21 @@ services:
       - rabbitmq_log:/var/log/rabbitmq/
     networks:
       - backbone
-  arduino-compiler:
-    container_name: arduino-compiler
-    build: ./firmwareCompile
+  s3:
+    container_name: s3
     restart: always
+    image: scireum/s3-ninja
     ports:
-      - 3005:3005
+      - 9444:9000
+      - 8081:8080
+    volumes:
+      - ./s3Data:/home/sirius/data
     networks:
       - backbone
 volumes:
   static-content:
   rabbitmq_data:
   rabbitmq_log:
-
-
 networks:
   backbone:
     driver: bridge
