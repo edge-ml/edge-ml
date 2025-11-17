@@ -6,22 +6,28 @@ BRANCH_NAME="main"
 
 cd /home/ubuntu/edge-ml
 
-docker-compose -f docker-compose-production.yaml pull
-
 cd frontend
 git checkout "$BRANCH_NAME"
 sudo -u ubuntu git pull
+
 cd ../ml
 git checkout "$BRANCH_NAME"
 sudo -u ubuntu git pull
+
 cd ../backend
 git checkout "$BRANCH_NAME"
 sudo -u ubuntu git pull
+
 cd ../authentication
 git checkout "$BRANCH_NAME"
 sudo -u ubuntu git pull
+
 cd ../Dataset-store
 git checkout "$BRANCH_NAME"
+sudo -u ubuntu git pull
+
+cd ../firmwareCompile
+git checkout main
 sudo -u ubuntu git pull
 
 cd ..

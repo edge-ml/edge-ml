@@ -76,10 +76,19 @@ services:
       - ./tsData:/app/app/DATA
       - ./rawCSVDATA:/app/app/RAW_CSV_DATA
       - .env-docker-local:/app/app/.env:ro
+      - ./logs/dataset-store:/app/logs
     networks:
       - backbone
     links:
       - mongo
+  arduino-compiler:
+    container_name: arduino-compiler
+    build: ./firmwareCompile
+    restart: always
+    ports:
+      - 3005:3005
+    networks:
+      - backbone
   mongo:
     container_name: mongo
     restart: always
