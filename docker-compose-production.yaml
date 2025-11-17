@@ -1,5 +1,16 @@
 version: "3"
 services:
+  explorer-model:
+    container_name: explorer-model
+    image: tecokit/edge-ml_model_beta:latest
+    restart: always
+    volumes:
+      - .env:/app/.env:ro
+    build: ./ml
+    ports:
+      - "3003:3003"
+    networks:
+      - backbone
   explorer-backend:
     container_name: explorer-backend
     restart: always
@@ -40,6 +51,7 @@ services:
       - explorer-backend
       - explorer-authentication
       - dataset-store
+      - explorer-model
     ports:
       - "80:80"
       - "443:443"
@@ -62,6 +74,7 @@ services:
       - ./tsData:/app/app/DATA
       - ./rawCSVDATA:/app/app/RAW_CSV_DATA
       - .env:/app/app/.env:ro
+      - ./logs/dataset-store:/app/logs
     networks:
       - backbone
     links:
