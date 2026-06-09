@@ -7,6 +7,9 @@ set -e
 # in each submodule publishes pre-built `tecokit/edge-ml_*_beta:latest` images
 # to Docker Hub on every push to the `beta` branch. This script just pulls
 # those images and recreates the running containers.
+#
+# Run with sudo: the `ubuntu` user is not in the docker group on the beta box,
+# so a bare `docker-compose` fails with "Couldn't connect to Docker daemon".
 
 git config --global --add safe.directory /home/ubuntu/edge-ml
 
@@ -18,6 +21,7 @@ sudo -u ubuntu git pull
 
 # Pull the latest beta images from Docker Hub and (re)start the stack.
 # `pull` is essential: `up -d` alone reuses the existing local image and would
-# NOT pick up a newly published one.
-docker-compose -f docker-compose-beta.yaml pull
+# NOT pick up a newly published one. `--ignore-pull-failures` tolerates
+# arduino-compiler, which builds from source and has no image to pull.
+docker-compose -f docker-compose-beta.yaml pull --ignore-pull-failures
 docker-compose -f docker-compose-beta.yaml up -d --remove-orphans
