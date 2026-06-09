@@ -2,6 +2,7 @@ version: "3"
 services:
   explorer-model:
     container_name: explorer-model
+    image: tecokit/edge-ml_model:latest
     restart: always
     volumes:
       - .env:/app/.env:ro
@@ -12,6 +13,7 @@ services:
       - backbone
   explorer-backend:
     container_name: explorer-backend
+    image: tecokit/edge-ml_backend:latest
     restart: always
     build: ./backend
     volumes:
@@ -27,6 +29,7 @@ services:
       - backbone
   explorer-authentication:
     container_name: explorer-authentication
+    image: tecokit/edge-ml_authentication:latest
     restart: always
     build: ./authentication
     volumes:
@@ -39,6 +42,7 @@ services:
       - backbone
   explorer-frontend:
     container_name: explorer-frontend
+    image: tecokit/edge-ml_frontend:latest
     environment:
       - NODE_ENV=production
     build: ./frontend
@@ -65,6 +69,7 @@ services:
       - backbone
   dataset-store:
     container_name: dataset-store
+    image: tecokit/edge-ml_dataset-store:latest
     build: ./Dataset-store
     restart: always
     ports:
@@ -112,7 +117,7 @@ services:
     depends_on:
       - explorer-frontend
       # Add --staging to this command and remove --force-renewal if you just want to test it
-    command: certonly --webroot --webroot-path=/var/www/html --email explorer@teco.edu --agree-tos --no-eff-email -d edge-ml-beta.dmz.teco.edu
+    command: certonly --webroot --webroot-path=/var/www/html --email explorer@teco.edu --agree-tos --no-eff-email -d app.edge-ml.org
   arduino-compiler:
     container_name: arduino-compiler
     build: ./firmwareCompile
