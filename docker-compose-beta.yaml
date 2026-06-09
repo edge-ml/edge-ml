@@ -69,7 +69,7 @@ services:
     volumes:
       - ./docs:/var/www
       - web-root:/var/www/html
-      - ./nginx_https.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx_https_beta.conf:/etc/nginx/nginx.conf:ro
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
       - ./dhparam:/etc/ssl/certs
