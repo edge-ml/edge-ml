@@ -3,6 +3,8 @@ services:
   explorer-model:
     container_name: explorer-model
     image: tecokit/edge-ml_model_beta:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     restart: always
     volumes:
       - .env:/app/.env:ro
@@ -14,6 +16,8 @@ services:
   explorer-backend:
     container_name: explorer-backend
     image: tecokit/edge-ml_backend_beta:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     restart: always
     build: ./backend
     volumes:
@@ -30,6 +34,8 @@ services:
   explorer-authentication:
     container_name: explorer-authentication
     image: tecokit/edge-ml_authentication_beta:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     restart: always
     build: ./authentication
     volumes:
@@ -43,6 +49,8 @@ services:
   explorer-frontend:
     container_name: explorer-frontend
     image: tecokit/edge-ml_frontend_beta:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     environment:
       - NODE_ENV=production
     build: ./frontend
@@ -70,6 +78,8 @@ services:
   dataset-store:
     container_name: dataset-store
     image: tecokit/edge-ml_dataset-store_beta:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     build: ./Dataset-store
     restart: always
     ports:
@@ -124,6 +134,18 @@ services:
     restart: always
     ports:
       - 3005:3005
+    networks:
+      - backbone
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_POLL_INTERVAL=60
+      - WATCHTOWER_CLEANUP=true
     networks:
       - backbone
 volumes:
