@@ -63,16 +63,6 @@ services:
       - explorer-authentication
       - dataset-store
       - explorer-model
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./docs:/var/www
-      - web-root:/var/www/html
-      - ./nginx_https_beta.conf:/etc/nginx/nginx.conf:ro
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - ./dhparam:/etc/ssl/certs
     networks:
       - backbone
   dataset-store:
@@ -148,7 +138,37 @@ services:
       - WATCHTOWER_CLEANUP=true
     networks:
       - backbone
+  caddy:
+    container_name: caddy
+    image: caddy:2.8.4-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - ACME_EMAIL=explorer@teco.edu
+      - CADDY_PUBLIC_HOST=beta.edge-ml.org
+      - CADDY_INTERNAL_HOST=edge-ml-beta.dmz.teco.edu
+      # First deploy / config testing: point at LE staging to avoid rate limits
+      # (browser shows untrusted — expected), then remove this line and recreate:
+      # - ACME_CA=https://acme-staging-v02.api.letsencrypt.org/directory
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./docs:/srv/docs:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - explorer-frontend
+      - explorer-backend
+      - explorer-authentication
+      - dataset-store
+      - explorer-model
+      - arduino-compiler
+    networks:
+      - backbone
 volumes:
+  caddy_data:
+  caddy_config:
   certbot-etc:
   certbot-var:
   web-root:

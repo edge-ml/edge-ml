@@ -1,0 +1,69 @@
+# edge-ml edge proxy — terminates TLS with automatic Let's Encrypt certs
+# (auto-renewing; no certbot/cron) and reverse-proxies to the app containers.
+#
+# Per-environment values come from the caddy service's environment in the
+# compose file:
+#   CADDY_PUBLIC_HOST    public domain(s), space-separated (e.g. app.edge-ml.org www.app.edge-ml.org)
+#   CADDY_INTERNAL_HOST  the .dmz.teco.edu name reached over the VPN
+#   ACME_EMAIL           account email for Let's Encrypt
+#   ACME_CA              (optional) set to the LE *staging* directory while testing,
+#                        unset for production issuance (the default below).
+{
+	email {$ACME_EMAIL}
+	acme_ca {$ACME_CA:https://acme-v02.api.letsencrypt.org/directory}
+}
+
+# Shared route map. Public and internal hostnames each get their own site
+# block (and thus their own certificate), so an ACME failure on one name
+# never takes the other down.
+(common) {
+	# Match nginx's client_max_body_size 10G.
+	request_body {
+		max_size 10GB
+	}
+
+	# IMPORTANT: keep the path prefix (the SPA calls /api/, /auth/, ... and the
+	# backends expect it). reverse_proxy with a path matcher preserves the
+	# prefix; do NOT use handle_path here (it would strip /api and 404).
+	reverse_proxy /api* explorer-backend:3001 {
+		transport http {
+			read_timeout 300s
+			write_timeout 300s
+		}
+		header_up Host {host}
+	}
+
+	reverse_proxy /auth* explorer-authentication:3002 {
+		header_up Host {host}
+	}
+
+	# Caddy auto-detects and forwards WebSocket upgrades.
+	reverse_proxy /ds* dataset-store:3004 {
+		transport http {
+			read_timeout 300s
+			write_timeout 300s
+		}
+		header_up Host {host}
+	}
+
+	reverse_proxy /ml* explorer-model:3003
+
+	reverse_proxy /arduinocompiler* arduino-compiler:3005
+
+	# Static docs (handle_path strips /docs, matching nginx's `alias`).
+	handle_path /docs* {
+		root * /srv/docs
+		file_server
+	}
+
+	# Everything else → the SPA served by the frontend container's internal nginx.
+	reverse_proxy explorer-frontend:80
+}
+
+{$CADDY_PUBLIC_HOST} {
+	import common
+}
+
+{$CADDY_INTERNAL_HOST} {
+	import common
+}
