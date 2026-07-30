@@ -50,6 +50,15 @@
 
 	reverse_proxy /arduinocompiler* arduino-compiler:3005
 
+	# WHAR dataset import service (imports can take minutes; keep long timeouts).
+	reverse_proxy /whar* whar-import:3006 {
+		transport http {
+			read_timeout 300s
+			write_timeout 300s
+		}
+		header_up Host {host}
+	}
+
 	# Static docs (handle_path strips /docs, matching nginx's `alias`).
 	handle_path /docs* {
 		root * /srv/docs

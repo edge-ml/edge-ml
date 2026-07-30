@@ -126,6 +126,21 @@ services:
       - 3005:3005
     networks:
       - backbone
+  whar-import:
+    container_name: whar-import
+    image: tecokit/edge-ml_whar-import:latest
+    build: ./whar-import
+    restart: always
+    environment:
+      - DATASET_STORE_URL=http://dataset-store:3004/ds
+    ports:
+      - 3006:3006
+    volumes:
+      - whar-cache:/data/whar
+    depends_on:
+      - dataset-store
+    networks:
+      - backbone
 volumes:
   certbot-etc:
   certbot-var:
@@ -143,6 +158,7 @@ volumes:
       o: bind
   rabbitmq_data:
   rabbitmq_log:
+  whar-cache:
 networks:
   backbone:
     driver: bridge

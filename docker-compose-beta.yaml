@@ -115,6 +115,23 @@ services:
       - 3005:3005
     networks:
       - backbone
+  whar-import:
+    container_name: whar-import
+    image: tecokit/edge-ml_whar-import_beta:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    build: ./whar-import
+    restart: always
+    environment:
+      - DATASET_STORE_URL=http://dataset-store:3004/ds
+    ports:
+      - 3006:3006
+    volumes:
+      - whar-cache:/data/whar
+    depends_on:
+      - dataset-store
+    networks:
+      - backbone
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower
@@ -153,6 +170,7 @@ services:
       - dataset-store
       - explorer-model
       - arduino-compiler
+      - whar-import
     networks:
       - backbone
 volumes:
@@ -160,6 +178,7 @@ volumes:
   caddy_config:
   rabbitmq_data:
   rabbitmq_log:
+  whar-cache:
 networks:
   backbone:
     driver: bridge
