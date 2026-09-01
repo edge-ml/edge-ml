@@ -13,39 +13,8 @@ services:
       - "3003:3003"
     networks:
       - backbone
-  explorer-backend:
-    container_name: explorer-backend
-    image: tecokit/edge-ml_backend_beta:latest
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    restart: always
-    build: ./backend
-    volumes:
-      - .env:/app/.env:ro
-    ports:
-      - "3001:3001"
-    links:
-      - mongo
-    depends_on: 
-      - explorer-authentication
-      - rabbitmq
-    networks:
-      - backbone
-  explorer-authentication:
-    container_name: explorer-authentication
-    image: tecokit/edge-ml_authentication_beta:latest
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    restart: always
-    build: ./authentication
-    volumes:
-      - .env:/app/.env:ro
-    ports:
-      - "3002:3002"
-    links:
-      - mongo
-    networks:
-      - backbone
+  # explorer-backend (Koa) and explorer-authentication (Express) were retired:
+  # the dataset-store now serves /api + /auth itself (Python mono-backend).
   explorer-frontend:
     container_name: explorer-frontend
     image: tecokit/edge-ml_frontend_beta:latest
@@ -55,12 +24,7 @@ services:
       - NODE_ENV=production
     build: ./frontend
     restart: always
-    links:
-     - explorer-authentication
-     - explorer-backend
-    depends_on: 
-      - explorer-backend
-      - explorer-authentication
+    depends_on:
       - dataset-store
       - explorer-model
     networks:
@@ -83,6 +47,9 @@ services:
       - backbone
     links:
       - mongo
+      - rabbitmq
+    depends_on:
+      - rabbitmq
   mongo:
     container_name: mongo
     restart: always
@@ -165,8 +132,6 @@ services:
       - caddy_config:/config
     depends_on:
       - explorer-frontend
-      - explorer-backend
-      - explorer-authentication
       - dataset-store
       - explorer-model
       - arduino-compiler

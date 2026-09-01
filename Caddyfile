@@ -25,7 +25,9 @@
 	# IMPORTANT: keep the path prefix (the SPA calls /api/, /auth/, ... and the
 	# backends expect it). reverse_proxy with a path matcher preserves the
 	# prefix; do NOT use handle_path here (it would strip /api and 404).
-	reverse_proxy /api* explorer-backend:3001 {
+	# /api, /auth and /ds are all served by the dataset-store Python mono-backend
+	# now (the Koa backend and Express auth services were retired).
+	reverse_proxy /api* dataset-store:3004 {
 		transport http {
 			read_timeout 300s
 			write_timeout 300s
@@ -33,7 +35,7 @@
 		header_up Host {host}
 	}
 
-	reverse_proxy /auth* explorer-authentication:3002 {
+	reverse_proxy /auth* dataset-store:3004 {
 		header_up Host {host}
 	}
 
