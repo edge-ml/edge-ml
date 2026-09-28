@@ -13,39 +13,6 @@ services:
       - "3003:3003"
     networks:
       - backbone
-  explorer-backend:
-    container_name: explorer-backend
-    image: tecokit/edge-ml_backend:latest
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    restart: always
-    build: ./backend
-    volumes:
-      - .env:/app/.env:ro
-    ports:
-      - "3001:3001"
-    links:
-      - mongo
-    depends_on: 
-      - explorer-authentication
-      - rabbitmq
-    networks:
-      - backbone
-  explorer-authentication:
-    container_name: explorer-authentication
-    image: tecokit/edge-ml_authentication:latest
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    restart: always
-    build: ./authentication
-    volumes:
-      - .env:/app/.env:ro
-    ports:
-      - "3002:3002"
-    links:
-      - mongo
-    networks:
-      - backbone
   explorer-frontend:
     container_name: explorer-frontend
     image: tecokit/edge-ml_frontend:latest
@@ -55,12 +22,7 @@ services:
       - NODE_ENV=production
     build: ./frontend
     restart: always
-    links:
-     - explorer-authentication
-     - explorer-backend
-    depends_on: 
-      - explorer-backend
-      - explorer-authentication
+    depends_on:
       - dataset-store
       - explorer-model
     networks:
@@ -83,6 +45,8 @@ services:
       - backbone
     links:
       - mongo
+    depends_on:
+      - rabbitmq
   mongo:
     container_name: mongo
     restart: always
@@ -148,11 +112,26 @@ services:
       - caddy_config:/config
     depends_on:
       - explorer-frontend
-      - explorer-backend
-      - explorer-authentication
       - dataset-store
       - explorer-model
       - arduino-compiler
+    networks:
+      - backbone
+  whar-import:
+    container_name: whar-import
+    image: tecokit/edge-ml_whar-import:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    build: ./whar-import
+    restart: always
+    environment:
+      - DATASET_STORE_URL=http://dataset-store:3004/ds
+    ports:
+      - 3006:3006
+    volumes:
+      - whar-cache:/data/whar
+    depends_on:
+      - dataset-store
     networks:
       - backbone
 volumes:
@@ -160,6 +139,7 @@ volumes:
   caddy_config:
   rabbitmq_data:
   rabbitmq_log:
+  whar-cache:
 networks:
   backbone:
     driver: bridge
