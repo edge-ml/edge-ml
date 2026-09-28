@@ -16,3 +16,7 @@
 [submodule "firmwareCompile"]
 	path = firmwareCompile
 	url = git@github.com:edge-ml/firmwareCompile.git
+[submodule "whar-import"]
+	path = whar-import
+	url = https://github.com/edge-ml/whar-import.git
+	branch = beta

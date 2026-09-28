@@ -3,6 +3,8 @@ services:
   explorer-model:
     container_name: explorer-model
     image: tecokit/edge-ml_model_beta:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     restart: always
     volumes:
       - .env:/app/.env:ro
@@ -11,65 +13,27 @@ services:
       - "3003:3003"
     networks:
       - backbone
-  explorer-backend:
-    container_name: explorer-backend
-    image: tecokit/edge-ml_backend_beta:latest
-    restart: always
-    build: ./backend
-    volumes:
-      - .env:/app/.env:ro
-    ports:
-      - "3001:3001"
-    links:
-      - mongo
-    depends_on: 
-      - explorer-authentication
-      - rabbitmq
-    networks:
-      - backbone
-  explorer-authentication:
-    container_name: explorer-authentication
-    image: tecokit/edge-ml_authentication_beta:latest
-    restart: always
-    build: ./authentication
-    volumes:
-      - .env:/app/.env:ro
-    ports:
-      - "3002:3002"
-    links:
-      - mongo
-    networks:
-      - backbone
+  # explorer-backend (Koa) and explorer-authentication (Express) were retired:
+  # the dataset-store now serves /api + /auth itself (Python mono-backend).
   explorer-frontend:
     container_name: explorer-frontend
     image: tecokit/edge-ml_frontend_beta:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     environment:
       - NODE_ENV=production
     build: ./frontend
     restart: always
-    links:
-     - explorer-authentication
-     - explorer-backend
-    depends_on: 
-      - explorer-backend
-      - explorer-authentication
+    depends_on:
       - dataset-store
       - explorer-model
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./docs:/var/www
-      - web-root:/var/www/html
-      - ./nginx_https.conf:/etc/nginx/nginx.conf:ro
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - ./dhparam:/etc/ssl/certs
     networks:
       - backbone
   dataset-store:
     container_name: dataset-store
     image: tecokit/edge-ml_dataset-store_beta:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     build: ./Dataset-store
     restart: always
     ports:
@@ -83,6 +47,9 @@ services:
       - backbone
     links:
       - mongo
+      - rabbitmq
+    depends_on:
+      - rabbitmq
   mongo:
     container_name: mongo
     restart: always
@@ -107,17 +74,6 @@ services:
       - rabbitmq_log:/var/log/rabbitmq/
     networks:
       - backbone
-  certbot:
-    container_name: certbot
-    image: certbot/certbot
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/html
-    depends_on:
-      - explorer-frontend
-      # Add --staging to this command and remove --force-renewal if you just want to test it
-    command: certonly --webroot --webroot-path=/var/www/html --email explorer@teco.edu --agree-tos --no-eff-email -d edge-ml-beta.dmz.teco.edu,beta.edge-ml.org
   arduino-compiler:
     container_name: arduino-compiler
     build: ./firmwareCompile
@@ -126,23 +82,68 @@ services:
       - 3005:3005
     networks:
       - backbone
+  whar-import:
+    container_name: whar-import
+    image: tecokit/edge-ml_whar-import_beta:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    build: ./whar-import
+    restart: always
+    environment:
+      - DATASET_STORE_URL=http://dataset-store:3004/ds
+    ports:
+      - 3006:3006
+    volumes:
+      - whar-cache:/data/whar
+    depends_on:
+      - dataset-store
+    networks:
+      - backbone
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_POLL_INTERVAL=60
+      - WATCHTOWER_CLEANUP=true
+    networks:
+      - backbone
+  caddy:
+    container_name: caddy
+    image: caddy:2.8.4-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - ACME_EMAIL=explorer@teco.edu
+      - CADDY_PUBLIC_HOST=beta.edge-ml.org
+      - CADDY_INTERNAL_HOST=edge-ml-beta.dmz.teco.edu
+      # First deploy / config testing: point at LE staging to avoid rate limits
+      # (browser shows untrusted — expected), then remove this line and recreate:
+      # - ACME_CA=https://acme-staging-v02.api.letsencrypt.org/directory
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./docs:/srv/docs:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - explorer-frontend
+      - dataset-store
+      - explorer-model
+      - arduino-compiler
+      - whar-import
+    networks:
+      - backbone
 volumes:
-  certbot-etc:
-  certbot-var:
-  web-root:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/ubuntu/dockerVolume/
-      o: bind
-  dhparam:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/ubuntu/dhparam/
-      o: bind
+  caddy_data:
+  caddy_config:
   rabbitmq_data:
   rabbitmq_log:
+  whar-cache:
 networks:
   backbone:
     driver: bridge
